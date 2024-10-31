@@ -1,5 +1,5 @@
 
-name: Java CI with Maven
+name: merge translate
 
 on:
   workflow_dispatch: # 允许手动触发
@@ -19,9 +19,12 @@ jobs:
         distribution: 'temurin'
         cache: maven
         cache-dependency-path: 'pom.xml'
-        
-    - name: Build with Maven
-      run: mvn -B install --file pom.xml
+
+    - name: Compile with Maven
+      run: mvn compile
+
+    - name: Copy dependencies
+      run: mvn dependency:copy-dependencies -DoutputDirectory=target/dependency
 
     - name: Run Specified Java Class
-      run: mvn exec:java -Dexec.mainClass="cn.citizenwiki.MergeAndConvert"  # 运行指定类
+      run: java -cp "target/classes:target/dependency/*" cn.citizenwiki.MergeAndConvert  # 运行指定类
