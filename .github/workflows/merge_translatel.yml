@@ -1,0 +1,27 @@
+
+name: Java CI with Maven
+
+on:
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4  # 拉取仓库代码
+    
+    - name: Set up JDK 21 # 配置 JDK 版本
+      uses: actions/setup-java@v4 
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+        cache-dependency-path: 'pom.xml'
+        
+    - name: Build with Maven
+      run: mvn -B install --file pom.xml
+
+    - name: Run Specified Java Class
+      run: mvn exec:java -Dexec.mainClass="cn.citizenwiki.MergeAndConvert"  # 运行指定类
